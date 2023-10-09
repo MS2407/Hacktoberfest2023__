@@ -1,0 +1,41 @@
+class Solution {
+public:
+    int solve(int idx1,int idx2,int n1,int n2,vector<int>& nums1,vector<int>& nums2,vector<vector<int>>& mem){
+        if(idx1 >= n1 || idx2 >= n2){
+            return -1e9;
+        }
+
+        if(mem[idx1][idx2] != -1){
+            return mem[idx1][idx2]; 
+        }
+    
+        int take1 = -1e9,not_take1 = -1e9;
+
+        //NOT Taking nums1[idx1]
+        not_take1 = solve(idx1+1,idx2,n1,n2,nums1,nums2,mem);
+
+        //Taking nums1[idx1]
+        for(int j = idx2;j < n2;j++){
+            //Taking nums2[idx2]
+            //NOTE: Using Max is important to avoid addition of -1e9 to current ans
+            int ans = max(nums1[idx1]*nums2[j],nums1[idx1]*nums2[j] + solve(idx1+1,j+1,n1,n2,nums1,nums2,mem));
+            take1 = max(ans,take1);
+        }
+
+        return mem[idx1][idx2] = max(take1,not_take1);
+
+    }
+    int maxDotProduct(vector<int>& nums1, vector<int>& nums2) {
+        int n1 = nums1.size(),n2 = nums2.size(),ans;
+        vector<vector<int>> mem(n1,vector<int>(n2,-1));
+
+        return solve(0,0,n1,n2,nums1,nums2,mem);
+       
+    }
+    /*
+
+
+        O[n*m] , O[n*m]
+
+    */
+};
